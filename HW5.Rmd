@@ -1,0 +1,44 @@
+---
+title: "HW5"
+author: "Hong Jiang"
+date: "October 8, 2015"
+output: html_document
+---
+
+
+### Homeowrk 5
+
+#### Question 1
+```{r}
+extract_numercial_columns = function(inputdata) #this function takes a data frame and return all numeric columns from it
+  {
+  nums = sapply(inputdata, is.numeric) #Since a data frame is a list we can use the list-apply functions
+  numeric_columns = inputdata[, nums]
+  return (numeric_columns)
+  }
+  
+  require(ggplot2)
+  extract_numercial_columns(diamonds)
+```
+
+#### Question 2
+```{r}
+
+```
+
+#### Question 3
+```{r}
+  library(ggplot2)
+  
+  data(diamonds)
+  options(stringsAsFactors = F)
+  x <- names(which(sapply(diamonds, is.double))) #
+  y <- expand.grid(x,x)
+  
+  for(i in 1:nrow(y)) {
+    plot(diamonds[,y[i,1]],diamonds[,y[i,2]])
+  }
+  
+
+```  
+
