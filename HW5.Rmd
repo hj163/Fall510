@@ -14,11 +14,11 @@ extract_numerical_columns <- function(dataframe) #this function takes a data fra
   {
   nums <- sapply(dataframe, is.numeric) #Since a data frame is a list we can use the list-apply functions to get all numerical columns
   numeric_columns <- dataframe[, nums] #create the variable that contains all numerical columns
-  return (numeric_columns)
+  return (numeric_columns) #output
   }
   
-  require(ggplot2)
-  extract_numerical_columns(diamonds)
+  require(ggplot2) #require the ggplot2 package to load the diamond data frame
+  extract_numerical_columns(diamonds) #test
 ```
 
 #### Question 2
@@ -40,8 +40,8 @@ pearson_cor <- function(dataframe) #create a function with input data frame and 
   newdata #output newdata 
 } #finish function
 
-#require(ggplot2) #load ggplot2 package to get diamonds data frame
-#data(diamonds) #load diamonds data frame
+require(ggplot2) #load ggplot2 package to get diamonds data frame
+
 pearson_cor(diamonds) #test pearson_cor() by using diamonds data
 
 
@@ -49,16 +49,29 @@ pearson_cor(diamonds) #test pearson_cor() by using diamonds data
 
 #### Question 3
 ```{r}
-  library(ggplot2)
-  
-  data(diamonds)
-  options(stringsAsFactors = F)
-  x <- names(which(sapply(diamonds, is.double))) #
-  y <- expand.grid(x,x)
-  
-  for(i in 1:nrow(y)) {
-    plot(diamonds[,y[i,1]],diamonds[,y[i,2]])
-  }
+  sca_plot <- function(dataframe) # this function sca_plot() takes input data frame variable and outputs a labeled scatter plot for every pair of numerica variables.
+    { 
+  library(ggplot2) #load ggplot2 package to get diamonds data frame
+  library(grid) #load grid package to create plot
+  library(gridExtra) #load gridExtra package in order to integrate all plots
+  dataframenumeric <- extract_numerical_columns(dataframe) #create a variable contains all numeric column by using extract_numerical_columns() 
+  splotall<-list() #create a variable for a list of plots where we will use it to put all plots
+  n=1 #create a variable n that will represent position in splotall; as we will use it to go through all positions in splotall, let it equal to 1 first
+  for (i in 1:(ncol(dataframenumeric)-1)){ #go through from the first column to the penult in dataframep
+    for (j in (i+1):ncol(dataframenumeric)){ #another loop going through from the i+1th column name to the last 
+      plotdata <- data.frame(dataframenumeric[,i],dataframenumeric[,j]) #create a variable plotdata and put the ith and jth columns of dataframenumeric in it. 
+      colnames(plotdata) <- c(colnames(dataframenumeric)[i],colnames(dataframenumeric)[j]) #make the column names of plotdata be the column names of ith and jth column of numeric data columns 
+      xyPCorr <- cor(dataframenumeric[,i],dataframenumeric[,j],method="pearson") # careate a varialbe xyPcorr which stores the Pearson correlation coefficient between the ith column and jth column 
+      splotall[[n]] <- (ggplot(plotdata,aes_string(x=colnames(dataframenumeric)[i],y=colnames(dataframenumeric)[j]))+geom_point()+ggtitle(paste("Correlation:",xyPCorr))) #create the scatter plot for plotdata, the x label is ith column name the y label is jth column name i, the geoms are points, the title is "Correlation:xyPCorr"
+      n=n+1 #add 1 to n in order to go to the next position in splotall
+    } #finish second loop
+  } #finish first loop
+  do.call(grid.arrange,splotall) #Output all plots as whole and display on grid.arrange by using do.call()
+} #finish function
+
+  # we need to preinstall gridExtra to combine the plots
+
+sca_plot(diamonds) #test sca_plot() by using diamonds data frame
   
 
 ```  
