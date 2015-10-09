@@ -10,19 +10,40 @@ output: html_document
 
 #### Question 1
 ```{r}
-extract_numercial_columns = function(inputdata) #this function takes a data frame and return all numeric columns from it
+extract_numerical_columns <- function(dataframe) #this function takes a data frame and return all numeric columns from it
   {
-  nums = sapply(inputdata, is.numeric) #Since a data frame is a list we can use the list-apply functions
-  numeric_columns = inputdata[, nums]
+  nums <- sapply(dataframe, is.numeric) #Since a data frame is a list we can use the list-apply functions to get all numerical columns
+  numeric_columns <- dataframe[, nums] #create the variable that contains all numerical columns
   return (numeric_columns)
   }
   
   require(ggplot2)
-  extract_numercial_columns(diamonds)
+  extract_numerical_columns(diamonds)
 ```
 
 #### Question 2
 ```{r}
+pearson_cor <- function(dataframe) #create a function with input data frame and output two columns with pair of variable names in the 1st column and their person correlation in the 2nd column
+{
+  Pair_of_variables <- c() #create a variable Pair_of_variables, where we will put pair of variable names in it
+  Pearson_cor_coeff <- c() #create a variable Pair_of_variables, where we will put corresponding Pearson correlation coefficient in it
+  dataframenum <- extract_numerical_columns(dataframe) #create a variable dataframenum that contains all numeric column names in dataframe by using the function we defined above
+  n=1 #create a variable n that will represent position in Pair_of_variables and Pearson_cor_coeff, we will use it to go through all positions in Pair_of_variables and Pearson_cor_coeff, let it equal to 1 first
+  for (i in 1:(ncol(dataframenum)-1)){ #use for loop to go through from the first column name to the penult in dataframenum
+    for (j in (i+1):ncol(dataframenum)){ #use for loop to go through from the i+1th column name to the last in dataframenum
+      Pair_of_variables[n]  <- paste(colnames(dataframenum)[i],"-",colnames(dataframenum)[j],sep="") #using paste() to write pair of variable names in a single string separated by a -, and put into Pair_of_variables
+      Pearson_cor_coeff[n]  <- cor(dataframenum[ ,i],dataframenum[ ,j],method="pearson") #using cor() to calculate the Pearson correlation coefficient between the ith column and jth column in dataframenum, and write down the result in Pearson_cor_coeff
+      n=n+1 #add 1 to n in order to go to the next positions in Pair_of_variables and Pearson_cor_coeff
+    } #finish second for loop
+  }#finish first for loop
+  newdata<-data.frame(Pair_of_variables, Pearson_cor_coeff) #create a data frame called newdata, put Pair_of_variables and Pearson_cor_coeff into it 
+  newdata #output newdata 
+} #finish function
+
+#require(ggplot2) #load ggplot2 package to get diamonds data frame
+#data(diamonds) #load diamonds data frame
+pearson_cor(diamonds) #test pearson_cor() by using diamonds data
+
 
 ```
 
