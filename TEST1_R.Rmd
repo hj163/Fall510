@@ -1,0 +1,63 @@
+---
+title: "TEST1_R"
+author: "Hong Jiang"
+date: "October 14, 2015"
+output: html_document
+---
+
+
+### Question 1
+```{r}
+require(ggplot2) #load the package to use the diamonds data frame
+data(diamonds) #load data frame
+
+rowcar <- nrow(mtcars) #create the variable rowc which has the value of # of rows in mtcars
+rowdia <- nrow(diamonds) #create the variable rowd which has the value of # of rows in diamonds
+col <- mtcars$vs #create teh variable col which has the value of the vscolumn in mrcars
+col1 <- length(which(col == 1)) #create the variable col1 that is the number of rows of 1s in vs clo
+col0 <- length(which(col == 0)) #create the variable col0 that is the number of rows of 0s in vsclo
+t <- round(rowdia*col1/rowcar) # create the variable t, with the value of number of trues in the logical column
+f <- round(rowdia*col0/rowcar) #create the varaible t,f with the value of number of false in the logical column
+
+diamonds$logicalcol <- rep(c(TRUE,FALSE),times=c(t,f)) # add a logical column to diamonds data named logicalcol with the value of t rows of TRUE and f rows of FALSE
+
+```
+### Question 2
+```{r}
+factorandlogical <- function(dataframe)# this function takes dataframe as input and output all factor and logical lolumns 
+{factorcol <- dataframe[sapply(dataframe, is.factor)] # use sapply() to extract factor columns and assign them to factorcol
+ logiccol <- dataframe[sapply(dataframe, is.logical)] # use sapply() to extract logical columns and assign them to logiccol
+ extract <- data.frame(factorcol,logiccol)
+ return(extract)}
+ summary(factorandlogical(diamonds)) #test to see the summary for extracted factor and logical column
+  
+
+```
+### Question 3
+```{r}
+p1=ggplot(diamonds,aes(x=cut))+geom_bar(fill="gray") #plot a bar graph for factor variable cut and color it as gray 
+p2=ggplot(diamonds,aes(x=color))+geom_bar(fill="gray") #plot a bar graph for factor variable color and color it as gray
+p3=ggplot(diamonds,aes(x=clarity))+geom_bar(fill="gray") #plot a bar graph for factor variable clarity and color it as gray 
+p4=ggplot(diamonds,aes(x=logicalcol))+geom_bar(fill="gray") #plot a bar graph for logical column variable logicalcol and color it as gray 
+require(grid)
+require(gridExtra) #for the use of multiply graphs into one page
+grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2)  # using grid.arragne to put 4 plots into 2 by 2 one page graph
+```
+### Question 4
+```{r}
+
+
+alistoftable <-function(dataframe){ #create a function take dataframe as input and output a list of frequency table of categorical and logical variable
+ variableswanted <- factorandlogical(dataframe) # create the variableswanted as the variables which will be used to create a llist of frequency tbales
+ tablelist<-list() # use list() function to create the return variable as a list of table
+ for (i in 1:ncol(variableswanted)){ # loop through all wanted variables(factor and logical in this case )
+ tablelist[[i]] <- as.data.frame(table(variableswanted[,i])) # use table() to get a frequence table of each variabl in variableswanted, and use as.data.frame to make them as a data frame
+ }
+return(tablelist)}
+
+alistoftable(diamonds)
+
+#check with another simple method
+table <- list(table(diamonds$cut),table(diamonds$color),table(diamonds$clarity),table(diamonds$logicalcol))
+table
+```
