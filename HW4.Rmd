@@ -35,6 +35,8 @@ c(rep(tmp,times=10),4) # repeat tem by 10 times and add another 4 since 4 occurs
 #### g
 ```{r}
 c(rep(4,times=10),rep(6,times=20),rep(3,times=30)) # repeat 4 by 10 times, repeat 6 by 20 times and repeat 3 by 30 times as required
+# SW: here's an easier way
+rep(c(4,6,3),10 * 1:3)
 ```
 
 ### #2
