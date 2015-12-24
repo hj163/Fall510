@@ -5,6 +5,8 @@ date: "October 22, 2015"
 output: html_document
 ---
 
+SW: you have the right pieces, but they are not well organized. your output is confusing, you've dropped labels in a lot of cases, and you repeat the summary measures for the numerical and categorical variables. you need to look at the absolute value of the correlation coefficient, not just positive values. you also should explicitly call `return`. separate note, good job dealing with binary variables.
+
 ```{r}
 require(grid) #load grid package for plots
 require(ggplot2) #load ggplot2 package for plots
@@ -74,7 +76,9 @@ explore<-function(dataframe,binsize,cor_threshold)
   #Question 4bi: 
   thetable<-list() #create a variable  for a list of table
   for (i in 1:ncol(nums)){ #for each numeric column in the data frame
-  thetable[[i]] <- summary(nums[,i]) #let the summary table of ith column to be the ith element in thetable
+  thetable[[i]] <- summary(nums[,i]) 
+  # SW: when you print this, you lose the variable names, so it is not helpful
+  #let the summary table of ith column to be the ith element in thetable
   }#finish foor loop
   print(thetable) #output 
   #Question 4biii:
@@ -111,6 +115,8 @@ for (i in 1:(length(trail))){ #oop to go through  trail
     } #finish eles{}
 } #finish for loop
 newdiamonds<-data.frame(diamonds,logicalcol) #create a new data frame called newdiamonds and put diamonds and logicalcol into it
+# SW: what is this column? give it a descriptive name.
+
 explore(newdiamonds, c(5,20,50), 0.25) #test explore() using newdiamonds
 explore(mtcars,c(5,20,50),0.25) #test explore() using mtcars
 ```
